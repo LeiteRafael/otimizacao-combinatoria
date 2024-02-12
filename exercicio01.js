@@ -17,7 +17,9 @@ class Exercicio01 {
         const input = this._createInputData(vars, constraints, this._nameOfProblem);
 
         this._writeFormulation(input, this.options);
-        this._resolveProblem(input, this.options, this._descriptionOfZ);
+        const computation = this._resolveProblem(input, this.options, this._descriptionOfZ);
+
+        console.log("Escoamento possivel :", computation.result.vars)
     }
 
     // Cria as variavéis para as arrestas que chegam em E
@@ -35,11 +37,11 @@ class Exercicio01 {
             this._createConstraints([[1, 'Xce']], '<=', 7.0),
             this._createConstraints([[1, 'Xbc']], '<=', 8.0),
             this._createConstraints([[1, 'Xbd']], '<=', 3.0),
-            this._createConstraints([[1, 'Xde']], '<=', 8.0),
+            this._createConstraints([[1, 'Xde']], '<=', 5.0),
             // Restrições de conservação de fluxo  - Aqui trouxe a restrições da esquerda para a direita e inverti o sinal
-            this._createConstraints([[1, 'Xac'], [1, 'Xbc'], [-1, 'Xce']], '<=', 0.0),
-            this._createConstraints([[1, 'Xab'], [-1, 'Xbc'], [-1, 'Xbd']], '<=', 0.0),
-            this._createConstraints([[1, 'Xbd'], [-1, 'Xde']], '<=', 0.0),
+            this._createConstraints([[1, 'Xac'], [1, 'Xbc'], [-1, 'Xce']], '>=', 0.0),
+            this._createConstraints([[1, 'Xab'], [-1, 'Xbc'], [-1, 'Xbd']], '>=', 0.0),
+            this._createConstraints([[1, 'Xbd'], [-1, 'Xde']], '>=', 0.0),
             // Restrições de positividade para variaveis
             this._createConstraints([[1, 'Xac']], '>=', 0.0),
             this._createConstraints([[1, 'Xab']], '>=', 0.0),

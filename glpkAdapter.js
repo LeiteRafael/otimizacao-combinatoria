@@ -38,6 +38,8 @@ function resolveProblem(input, options, descriptionOfZ = 'Z') {
 
     console.log(descriptionOfZ, computation.result.z);
     console.log("\n");
+
+    return computation;
 };
 
 function createConstraints(arr, operator, value) {
