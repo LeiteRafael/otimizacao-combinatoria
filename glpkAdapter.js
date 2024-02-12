@@ -40,10 +40,23 @@ function resolveProblem(input, options, descriptionOfZ = 'Z') {
     console.log("\n");
 };
 
-function createBnds(operator, value) {
+function createConstraints(arr, operator, value) {
+    const vars = [];
+    arr.forEach(element => {
+        vars.push(_createVars(element[1], element[0]))
+    });
+
+    return { vars, bnds: _createBnds(operator, value) }
+};
+
+function _createBnds(operator, value) {
     const type = operator == '<=' ? glpk.GLP_UP : glpk.GLP_LO;
     return { type, ub: value, lb: 0.0 }
-}
+};
+
+function _createVars(name, value) {
+    return { name, coef: value }
+};
 
 module.exports = {
     glpk,
@@ -51,5 +64,5 @@ module.exports = {
     createInputData,
     writeFormulation,
     resolveProblem,
-    createBnds
+    createConstraints
 }
