@@ -19,9 +19,9 @@ class Exercicio02 {
         this._writeFormulation(input, this.options);
         const computation = this._resolveProblem(input, this.options, this._descriptionOfZ);
 
-        console.log("tempo minimo para cada etapa comecar:", computation.result.vars,"\n\n")
-        console.log("tempo que cada etapa demora pra ser finalizada considerando os pre-requisitos:",
-            this._generateTimeFinalization(computation.result.vars));
+        console.log("Tempo minimo para cada etapa comecar:", computation.result.vars, "\n\n")
+        console.log("Tempo que cada etapa demora pra ser finalizada considerando os pre-requisitos:",
+            this._generateTimeFinalization(computation.result.vars), '\n\n');
     }
 
     // Cria as variavel Chaves onde o valor representa o tempo em que a etapa inicia
@@ -82,5 +82,6 @@ class Exercicio02 {
         return imput;
     };
 }
+
 const exercicio02 = new Exercicio02();
 exercicio02.execute();
