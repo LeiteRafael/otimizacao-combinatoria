@@ -14,11 +14,13 @@ function options() {
     };
 }
 
-function createInputData(vars, constraints, name) {
+function createInputData(vars, constraints, name, type) {
+    const direction = type == 'MAX' ? glpk.GLP_MAX : glpk.GLP_MIN;
+
     return {
         name,
         objective: {
-            direction: glpk.GLP_MAX,
+            direction,
             name: 'obj',
             vars
         },
@@ -53,7 +55,7 @@ function createConstraints(arr, operator, value) {
 
 function _createBnds(operator, value) {
     const type = operator == '<=' ? glpk.GLP_UP : glpk.GLP_LO;
-    return { type, ub: value, lb: 0.0 }
+    return { type, ub: value, lb: value }
 };
 
 function _createVars(name, value) {
