@@ -19,7 +19,7 @@ class Exercicio02 {
         this._writeFormulation(input, this.options);
         const computation = this._resolveProblem(input, this.options, this._descriptionOfZ);
 
-        console.log("tempo minimo para cada etapa comecar:", computation.result.vars)
+        console.log("tempo minimo para cada etapa comecar:", computation.result.vars,"\n\n")
         console.log("tempo que cada etapa demora pra ser finalizada considerando os pre-requisitos:",
             this._generateTimeFinalization(computation.result.vars));
     }
@@ -42,8 +42,8 @@ class Exercicio02 {
             this._createConstraints([[1, 'Eletrica'], [-1, 'Aberturas']], '>=', 2.5),         // => Eletrica >= Aberturas + 2.5
             this._createConstraints([[1, 'Interior'], [-1, 'Eletrica']], '>=', 2.0),          // => Interior >= Eletrica + 2.0 
             this._createConstraints([[1, 'Exterior'], [-1, 'Aberturas']], '>=', 2.5),         // => Exterior >= Aberturas + 2.5
-            this._createConstraints([[1, 'Chaves'], [-1, 'Interior']], '>=', 4.0),          // => Chaves >= Interior + 4.0
-            this._createConstraints([[1, 'Chaves'], [-1, 'Exterior']], '>=', 3.0),          // => Chaves >= Exterior + 3.0
+            this._createConstraints([[1, 'Chaves'], [-1, 'Interior']], '>=', 4.0),            // => Chaves >= Interior + 4.0
+            this._createConstraints([[1, 'Chaves'], [-1, 'Exterior']], '>=', 3.0),            // => Chaves >= Exterior + 3.0
 
             // Existe algumas obviedades aqui que ajudam na criação das restrições
             // Eletrica precisa de abertura e teto, sabemos que tempo para fazer abertura é maior que o teto sempre, entao limitamos por abertura
@@ -76,10 +76,10 @@ class Exercicio02 {
         }
         for (const key in imput) {
             if (imput.hasOwnProperty(key) && table.hasOwnProperty(key)) {
-                table[key] = table[key] + imput[key];
+                imput[key] = table[key] + imput[key];
             }
         }
-        return table;
+        return imput;
     };
 }
 const exercicio02 = new Exercicio02();
