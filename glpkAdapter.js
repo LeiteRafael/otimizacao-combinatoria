@@ -54,7 +54,14 @@ function createConstraints(arr, operator, value) {
 };
 
 function _createBnds(operator, value) {
-    const type = operator == '<=' ? glpk.GLP_UP : glpk.GLP_LO;
+    let type;
+    if (operator === '<=') {
+        type = glpk.GLP_UP;
+    } else if (operator === '=') {
+        type = glpk.GLP_FX;
+    } else {
+        type = glpk.GLP_LO;
+    }
     return { type, ub: value, lb: value }
 };
 

@@ -22,7 +22,7 @@ class Exercicio03 {
 
     }
 
-    // --colocar as variaveis-----
+    // Variaveis que possuem a qtd. de polciais que começam a trabalhar no turno 
     _createVars() {
         return [
             { name: 'Turno1', coef: 1.0 },
@@ -34,7 +34,9 @@ class Exercicio03 {
         ];
     }
 
-    // Variaveis que possuem a qtd. de polciais que começa a trabalhar no turno 
+    // Restrições onde o turno anterior sempre compartilha policias com o seguinte.
+    // Porque cada turno possui 4 horas e os policias trabalham 8 horas.
+
     _mountConstraints() { // Aqui trouxe a restrições da direita para a esquerda e inverti o sinal
         return [
             this._createConstraints([[1, 'Turno1'], [1, 'Turno6']], '>=', 22),               // => Turno1 + Turno6 >= 22
