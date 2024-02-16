@@ -13,9 +13,17 @@ class Exercicio04 {
 
     execute() { // Chamada principal do programa
 
-        const { transportationCost, stock } = generateRandomValues(2, 2);
-        const { vars, arrayOfVars } = this._createVars(2, 2, transportationCost);
-        const constraints = this._mountConstraints(arrayOfVars, stock);
+        const numOfCustormers = 4;
+        const numOfDeposits = 2;
+
+        const { transportationCost, stock, customerDemands } = generateRandomValues(numOfDeposits, numOfCustormers);
+
+        const vars = this._createVars(numOfDeposits, numOfCustormers, transportationCost);
+
+        console.log(stock);
+        const constraints = this._mountConstraints(vars, stock, customerDemands);
+
+        console.log(constraints);
 
         const input = this._createInputData(vars, constraints, this._nameOfProblem, 'MIN');
 
@@ -25,39 +33,62 @@ class Exercicio04 {
 
     }
 
-    // Variaveis que possuem a qtd. de polciais que começam a trabalhar no turno 
+    // 
 
-    _createVars(numDeposits, numCustomers, transportationCost) {
+    _createVars(numOfDeposits, numOfCustormers, transportationCost,) {
         const vars = [];
-        const arrayOfVars = [];
-
-        for (let i = 1; i <= numDeposits; i++) {
-            for (let j = 1; j <= numCustomers; j++) {
-                arrayOfVars.push(`qtd_deposito_${i}_cliente_${j}`);
-                vars.push({ name: `qtd_deposito_${i}_cliente_${j}`, coef: transportationCost[`deposit_${i}-->customer_${j}`] });
+        for (let i = 0; i < numOfDeposits; i++) {
+            for (let j = 0; j < numOfCustormers; j++) {
+                console.log(transportationCost[i][j]);
+                vars.push({ name: `qtd_deposito_${i + 1}_cliente_${j + 1}`, coef: transportationCost[i][j] });
             }
         }
 
-        return { vars, arrayOfVars };
+        return vars;
     }
 
-
-    _mountConstraints(arrayOfVars, stock) { // Aqui trouxe a restrições da direita para a esquerda e inverti o sinal
+    _mountConstraints(vars, stock, customerDemands) { // Aqui trouxe a restrições da direita para a esquerda e inverti o sinal
         const constraints = [];
-        console.log('stock', stock);
+        const numOfCustormers = 4;
+        const numOfDeposits = 2;
 
-        arrayOfVars.forEach((element, index) => {
-            console.log(`Elemento: ${element}`, stock[`deposit_${index+1}`]);
-        });
+        console.log(customerDemands);
+
+        let count = 0;
+        let limit = 0;
+        for (let i = 1; i <= numOfDeposits; i++) {
+            let varsDeposito = [];
+
+            for (let j = 0; j < numOfCustormers; j++) {
+                console.log("aquiiiii", vars[count].name);
+                varsDeposito.push([1, vars[count].name]);
+                count++;
+            }
+
+            constraints[i] = this._createConstraints(varsDeposito, '<=', stock["deposit_" + i]);
+            limit = i;
+        }
 
 
-        return [
 
+        count = 0;
+        for (let i = 1; i <= numOfCustormers; i++) {
+            let varsDeposito = [];
 
-            this._createConstraints([[1, 'Turno1'], [1, 'Turno6']], '>=', 22),               // => Turno1 + Turno6 >= 22
-            // Restrições de positividade para variaveis
-            this._createConstraints([[1, 'Turno1']], '>=', 0),                               // => Turno1 >= 0
-        ];
+            for (let j = 0; j < numOfDeposits; j++) {
+
+                vars.forEach(element => {
+                    if (element.name.endsWith('cliente_' + j)) {
+                        varsDeposito.push([1, element.name]);
+                    }
+                });
+                count++;
+            }
+
+            constraints[limit + i] = this._createConstraints(varsDeposito, '=', customerDemands["customer_" + i]);
+        }
+
+        return constraints;
     }
 }
 
@@ -65,13 +96,13 @@ const exercicio4 = new Exercicio04();
 exercicio4.execute();
 
 
-function generateRandomValues(numDeposits, numCustomers) {
-    const depositArray = Array.from({ length: numDeposits }, (_, i) => "deposit_" + (i + 1));
-    const customerArray = Array.from({ length: numCustomers }, (_, i) => "customer_" + (i + 1));
+function generateRandomValues(numOfDeposits, numOfCustormers) {
+    const depositArray = Array.from({ length: numOfDeposits }, (_, i) => "deposit_" + (i + 1));
+    const customerArray = Array.from({ length: numOfCustormers }, (_, i) => "customer_" + (i + 1));
 
     const stock = {};
     const customerDemands = {};
-    const transportationCost = {};
+    const transportationCost = [];
 
     depositArray.forEach(deposit => {
         stock[deposit] = Math.floor(Math.random() * 50) + 1;
@@ -81,12 +112,12 @@ function generateRandomValues(numDeposits, numCustomers) {
         customerDemands[customer] = Math.floor(Math.random() * 50) + 1;
     });
 
-    depositArray.forEach(deposit => {
-        customerArray.forEach(customer => {
-            const key = `${deposit}-->${customer}`;
-            transportationCost[key] = Math.floor(Math.random() * 10) + 1;
-        });
-    });
+    for (let i = 0; i < depositArray.length; i++) {
+        transportationCost[i] = [];
+        for (let j = 0; j < customerArray.length; j++) {
+            transportationCost[i][j] = Math.floor(Math.random() * 10) + 1;
+        }
+    }
 
     return {
         stock,

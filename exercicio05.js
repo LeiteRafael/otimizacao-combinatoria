@@ -20,15 +20,16 @@ class Exercicio05 {
         const computation = this._resolveProblem(input, this.options);
         console.log("Variaveis", computation.result.vars, '\n\n');
         console.log("Qtd maxima de grupos de 6 monstros:", this._findSmallestQtdM(computation.result.vars), "\n\n");
-
     }
 
     _createVars() {
         return [
-            { name: 'TempoEmA', coef: 1.0 },
-            { name: 'TempoEmB', coef: 1.0 },
-            { name: 'TempoEmC', coef: 1.0 },
-            { name: 'TempoEmD', coef: 1.0 }
+            { name: 'QtdM1', coef: 1.0 },
+            { name: 'QtdM2', coef: 1.0 },
+            { name: 'QtdM3', coef: 1.0 },
+            { name: 'QtdM4', coef: 1.0 },
+            { name: 'QtdM5', coef: 1.0 },
+            { name: 'QtdM6', coef: 1.0 },
         ];
     }
 
@@ -43,14 +44,25 @@ class Exercicio05 {
             this._createConstraints([[1, 'TempoEmA'], [2, 'TempoEmC'], [1, 'TempoEmD'], [-1, 'QtdM6']], '=', 0),
 
             // As restrições aqui levam em conta o tempo que posso permanecer em cada lugar capturando, considerando o tempo de abertura e fechamento do lugar
+
+            // Quero que o bot trabalhe o tempo todo, entao ele tem que trabalhar as 10 horas disponiveis
+            this._createConstraints([[1, 'TempoEmA'], [1, 'TempoEmB'], [1, 'TempoEmC'], [1, 'TempoEmD']], '=', 10),
+
+            // Se ele vai trabalhar o tempo todo, entao ele vai ter que trabalhar no minimo 2h em A. Pq ele só pode ir pra B as 10h
+            this._createConstraints([[1, 'TempoEmA']], '>=', 2),
             this._createConstraints([[1, 'TempoEmA']], '<=', 4),
-            this._createConstraints([[1, 'TempoEmA'], [1, 'TempoEmB']], '<=', 4),
-            this._createConstraints([[1, 'TempoEmB']], '<=', 4),
-            this._createConstraints([[1, 'TempoEmB'], [1, 'TempoEmC']], '<=', 4),
-            this._createConstraints([[1, 'TempoEmC']], '<=', 4),
-            this._createConstraints([[1, 'TempoEmC'], [1, 'TempoEmD']], '<=', 6),
+
+            // Se ele vai trabalhar o tempo todo, entao ele vai ter que trabalhar no minimo 2h em D. Pq entre 16h - 18h só pode trabalhar em D.
+            this._createConstraints([[1, 'TempoEmD']], '>=', 2),
             this._createConstraints([[1, 'TempoEmD']], '<=', 4),
-            this._createConstraints([[1, 'TempoEmA'], [1, 'TempoEmB'], [1, 'TempoEmC'], [1, 'TempoEmD']], '<=', 10),
+
+            // Sabendo que se eu trabalhar em B e C, eu tenho todos os mosntros que preciso.
+            // Entao vou forçar ele trabalhar 6h entre B e C
+            this._createConstraints([[1, 'TempoEmB'], [1, 'TempoEmC']], '=', 6),
+            
+            // Forçando um balaceamento com no maximo 1 de diferença entre B e C
+            this._createConstraints([[1, 'TempoEmB']], '<=', 3.5),
+            this._createConstraints([[1, 'TempoEmC']], '<=', 3.5),
 
             // No mimino 30 min em cada lugar
             this._createConstraints([[1, 'TempoEmA']], '>=', 0.5),
