@@ -13,8 +13,8 @@ class Exercicio04 {
 
     execute() { // Chamada principal do programa
 
-        const numOfCustormers = 5;
-        const numOfDeposits = 5;
+        const numOfCustormers = process.argv[3] || 4;
+        const numOfDeposits = process.argv[2] || 2;
 
         const { transportationCost, stock, customerDemands } = this._generateRandomValues(numOfDeposits, numOfCustormers);
 
